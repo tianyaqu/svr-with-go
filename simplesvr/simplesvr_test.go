@@ -3,7 +3,7 @@ package main
 import (
 	"net"
 	"testing"
-	"github.com/tianyaqu/protocol"
+	"github.com/tianyaqu/simplesvr/protocol"
 )
 
 func TestSvr(t *testing.T){

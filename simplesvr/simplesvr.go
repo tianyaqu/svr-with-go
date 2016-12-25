@@ -5,7 +5,9 @@ import (
 	"log"
 	"fmt"
 	"bufio"
-	"github.com/tianyaqu/protocol"
+	"github.com/golang/protobuf/proto"
+	"github.com/tianyaqu/simplesvr/protocol"
+	m "github.com/tianyaqu/simplesvr/proto"
 )
 
 func main(){
@@ -37,6 +39,8 @@ func handleConn(conn net.Conn) {
 		return
 	}
 
+	query := &m.Request{}
+	query.Query = proto.String("lll")
 	p := protocol.Packet{}
 	p.Decode(buffer[:len])
 	fmt.Println(p)
