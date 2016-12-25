@@ -39,18 +39,36 @@ func handleConn(conn net.Conn) {
 		return
 	}
 
-	query := &m.Request{}
-	query.Query = proto.String("lll")
-	p := pbcodec.PbCodec{}
-	
+	p := pbcodec.PbCodec{}	
 	err = p.Decode(buffer[:len])
 	if err != nil {
 		fmt.Println(err)
 		return
 	}
 
+
 	fmt.Println(p)
-	p.Info = "ok"
-	rsp := p.Encode()
-	conn.Write(rsp)
+
+	req := &m.Request{}
+	err = proto.Unmarshal(([]byte)(p.Info), req)
+	if err != nil {
+		log.Fatalf("Unmarshal error %v\n",err)
+		return
+	}
+
+	answer := *req.Query + " success"
+	//fmt.Println("answ" + answer)
+
+	rsp := &m.Response{}
+	rsp.Answer = proto.String(answer)
+
+	data, err := proto.Marshal(rsp)
+	if err != nil {
+		log.Fatalf("marshalling error: %v\n", err)
+		return
+	}
+
+	p.Info = string(data)	
+	rspbytes := p.Encode()
+	conn.Write(rspbytes)
 }
