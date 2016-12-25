@@ -6,7 +6,7 @@ import (
 	"fmt"
 	"bufio"
 	"github.com/golang/protobuf/proto"
-	"github.com/tianyaqu/simplesvr/protocol"
+	"github.com/tianyaqu/simplesvr/pbcodec"
 	m "github.com/tianyaqu/simplesvr/proto"
 )
 
@@ -41,8 +41,14 @@ func handleConn(conn net.Conn) {
 
 	query := &m.Request{}
 	query.Query = proto.String("lll")
-	p := protocol.Packet{}
-	p.Decode(buffer[:len])
+	p := pbcodec.PbCodec{}
+	
+	err = p.Decode(buffer[:len])
+	if err != nil {
+		fmt.Println(err)
+		return
+	}
+
 	fmt.Println(p)
 	p.Info = "ok"
 	rsp := p.Encode()
